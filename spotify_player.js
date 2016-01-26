@@ -2,6 +2,9 @@ $(document).ready(function(){
 var API_URL = 'https://api.spotify.com/v1/search?type=track&query=';
 var searchTerm = "";
 var $trackList = $('.list-group');
+var currentButton;
+var currentAudio;
+var currentSeekBar;
 
 	$('.btn.btn-default').on('click', function(e){
 		e.preventDefault();
@@ -60,7 +63,7 @@ var $trackList = $('.list-group');
 								  +'<p class="js-author">'+artistName+'</p>'
 
 								  +'<div class="js-seekbar">'
-								    +'<progress value="5" max="30"></progress>'
+								    +'<progress value="0" max="30"></progress>'
 								  +'</div>'
 								+'</div>'
 								+'</div>'
@@ -73,37 +76,28 @@ var $trackList = $('.list-group');
 	}
 	$trackList.on("click", ".btn-play", function( event ) {
     	event.preventDefault();
-    	var currentButton = $(this).closest(".widget" ).children(".header").children(".btn-play");
-
-    	var currentAudio = $(this).closest(".widget" ).children("audio");
-    	console.log(currentButton);
-    	console.log(currentAudio);
+    	currentButton = $(this).closest(".widget" ).children(".header").children(".btn-play");
+    	currentAudio = $(this).closest(".widget" ).children("audio");
+    	currentSeekBar = $(this).closest(".widget" ).children(".header").children(".metadata").children('.js-seekbar').children("progress");
+    	console.log(currentSeekBar);
     	evaluatePlayer(currentButton, currentAudio);
 	});
 
 	function evaluatePlayer(button, audio){
-		// console.log($(this));
-		// console.log(button);
-		// console.log(audio);
-		// console.log(button.hasClass('playing'));
 		if(!button.hasClass('playing')){
 			audio.trigger('play');
 			button.addClass('playing');
+			audio.bind('timeupdate', updateTime);
 		} else {
 			audio.trigger('pause');
 			button.removeClass('playing');
 		}
- 	// if ($(this).closest( ".header").children(".btn-play").hasClass('playing')){
-  //  		$(this).closest( ".header").children(".btn-play").trigger('pause');
-  //  		$(this).closest( ".header").children(".btn-play").removeClass('playing');
- 	// } else {
-  //  		$(this).closest( ".header").children(".btn-play").trigger('play');
-  //  		$(this).closest( ".header").children(".btn-play").addClass('playing');
- 	// }
 	}
-	// $('.btn-play').on('click', evaluatePlayer);
 
-
+	function updateTime () {
+  		var current = currentAudio.prop('currentTime');
+  		currentSeekBar.attr('value',current);
+	}
 });
 
 
