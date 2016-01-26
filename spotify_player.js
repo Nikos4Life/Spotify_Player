@@ -25,7 +25,7 @@ var currentSeekBar;
  			})
 	}
 	function showSearchResults (response) {
-		// console.log(response)
+		console.log(response);
 		var tracks = response.tracks.items	;
 		$trackList.html('');
 		tracks.forEach(function (track, idx) {
@@ -85,6 +85,8 @@ var currentSeekBar;
 
 	function evaluatePlayer(button, audio){
 		if(!button.hasClass('playing')){
+			$( "audio" ).trigger('pause');
+			$('.btn-play').removeClass('playing');
 			audio.trigger('play');
 			button.addClass('playing');
 			audio.bind('timeupdate', updateTime);
