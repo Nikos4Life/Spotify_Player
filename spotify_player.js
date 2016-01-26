@@ -22,7 +22,7 @@ var $trackList = $('.list-group');
  			})
 	}
 	function showSearchResults (response) {
-		console.log(response)
+		// console.log(response)
 		var tracks = response.tracks.items	;
 		$trackList.html('');
 		tracks.forEach(function (track, idx) {
@@ -43,7 +43,6 @@ var $trackList = $('.list-group');
 		// console.log(name, artistName, source, image);
 		if(image && source){
 			// $trackList.append('<li class="list-group-item track"> Song\'s name : '+name+' <br>Artist\'s name: '+artistName+'Album\'s cover: <img class="img-responsive" src="'+image+'"></li>');
-			
 			$trackList.append(buildPlayer(name, artistName, image ,source));
 		} else {
 			console.log("No tiene name");
@@ -55,7 +54,7 @@ var $trackList = $('.list-group');
 		var html = '<li class="list-group-item track">'
 						+'<div class="widget">'
 							+'<div class="header">'
-								+'<div class="btn-play "></div>'
+								+'<div class="btn-play"></div>'
 								+'<div class="metadata">'
 								  +'<p class="js-title">'+name+'</p>'
 								  +'<p class="js-author">'+artistName+'</p>'
@@ -72,10 +71,39 @@ var $trackList = $('.list-group');
 						+'</div></li>';
 		return html;
 	}
-	$trackList.on( "click", ".btn-play", function( event ) {
+	$trackList.on("click", ".btn-play", function( event ) {
     	event.preventDefault();
-    	$(this).closest( ".widget" ).children("audio").trigger('play');
+    	var currentButton = $(this).closest(".widget" ).children(".header").children(".btn-play");
+
+    	var currentAudio = $(this).closest(".widget" ).children("audio");
+    	console.log(currentButton);
+    	console.log(currentAudio);
+    	evaluatePlayer(currentButton, currentAudio);
 	});
+
+	function evaluatePlayer(button, audio){
+		// console.log($(this));
+		// console.log(button);
+		// console.log(audio);
+		// console.log(button.hasClass('playing'));
+		if(!button.hasClass('playing')){
+			audio.trigger('play');
+			button.addClass('playing');
+		} else {
+			audio.trigger('pause');
+			button.removeClass('playing');
+		}
+ 	// if ($(this).closest( ".header").children(".btn-play").hasClass('playing')){
+  //  		$(this).closest( ".header").children(".btn-play").trigger('pause');
+  //  		$(this).closest( ".header").children(".btn-play").removeClass('playing');
+ 	// } else {
+  //  		$(this).closest( ".header").children(".btn-play").trigger('play');
+  //  		$(this).closest( ".header").children(".btn-play").addClass('playing');
+ 	// }
+	}
+	// $('.btn-play').on('click', evaluatePlayer);
+
+
 });
 
 
